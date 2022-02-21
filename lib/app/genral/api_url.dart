@@ -1,0 +1,1 @@
+String doctor_signup= "http://waaasil.com/care/api/users";

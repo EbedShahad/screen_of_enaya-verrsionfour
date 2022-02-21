@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:screen_of_enaya/Consultaion/Log_Consultaion.dart';
 import 'package:screen_of_enaya/Patient/TobBar/topBar.dart';
 import 'package:screen_of_enaya/Patient/patientBar.dart';
 import 'package:screen_of_enaya/styleApp.dart';
@@ -155,12 +154,13 @@ class _PateintDetils1State extends State<PateintDetils1> {
         ),
         backgroundColor: Color(0xFFFD6769),
         onPressed: () {
-          Navigator.push(
+          print(" log det ");
+         /* Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => LogConsultaionEdit(),
             ),
-          );
+          );*/
         },
       ),
     );

@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 // import 'package:screen_of_enaya/Patient/PatientDeatilsMain.dart';
-import 'package:screen_of_enaya/questions.dart';
-
-import 'appointment_card.dart';
-import 'consultaion.dart';
-import 'monitoring.dart';
 import 'patients.dart';
 // import 'dart:io';
 // import 'dart:js';
@@ -29,10 +24,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> _screens = [
     Patients(),
-    Appointments(),
-    Consultaions(),
-    Monitoring(),
-    Questions(),
+    // Appointments(),
+    // Consultaions(),
+   // Monitoring(),
+  //  Questions(),
   ];
 
   List<PersistentBottomNavBarItem> _navItems = [

@@ -8,41 +8,29 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:screen_of_enaya/app/genral/sharepref.dart';
+import 'package:screen_of_enaya/app/token/refresh_tomen.dart';
 import 'package:screen_of_enaya/doctorProfile/constants/strings.dart';
 import 'package:screen_of_enaya/doctorProfile/models/newsInfo.dart';
 import 'package:screen_of_enaya/doctorProfile/models/saveProfile.dart';
 import 'package:screen_of_enaya/doctorProfile/pages/showprofile.dart';
 import 'package:screen_of_enaya/doctorProfile/services/api_manager.dart';
-import 'package:screen_of_enaya/register_Pages/register_screens/OTP_Page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfilePage extends StatefulWidget {  
+class ProfilePage extends StatefulWidget {
   @override
   MapScreenState createState() => MapScreenState();
 }
 
 class MapScreenState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
-  getName() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    userName = sharedPreferences.getString("Doctor Name");
-  }
-
   bool _status = true;
-
-  // XFile image;
   File image1;
-  // String imagePath;
-  // ImagePicker picker = ImagePicker();
-
   TextEditingController bioController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   Future<NewsModel> _newsModel;
-  // Future<ProfileSaved> saveprofile;
-
   dynamic valProvince, valroles, valspec;
   File imageFile;
-  // String errMessage = 'Error Uploading Image';
   var _dataProvince;
   var _dataroles;
   var _dataspec;
@@ -61,8 +49,6 @@ class MapScreenState extends State<ProfilePage>
       state,
       gender;
   var userName;
-  // bool Loading;
-  //PickedFile pickedFile;
   final FocusNode myFocusNode = FocusNode();
   @override
   void initState() {
@@ -73,8 +59,6 @@ class MapScreenState extends State<ProfilePage>
     print(imageFile);
     var response1;
   }
-
-// ignore: unused_element
   Future _getFromGallery() async {
     final pickedFile = await ImagePicker().getImage(
       source: ImageSource.gallery,
@@ -89,14 +73,6 @@ class MapScreenState extends State<ProfilePage>
       //  upload();
     }
   }
-
-  // Widget _getData(var jardel) {
-  //   return Container(
-  //       child: Column(
-  //     children: [],
-  //   ));
-  // }
-
   Widget _getActionButtons() {
     return Padding(
       padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
@@ -129,34 +105,13 @@ class MapScreenState extends State<ProfilePage>
                   String n6 = valspec.toString();
                   print("this is image file ");
                   print(imageFile);
-
-                  // data = await SaveData(
-                  //   n1,
-                  //   n2,
-                  //   n3,
-                  //   n4,
-                  //   n5,
-                  //   n6,
-                  //   imageFile,
-                  // );
                   data = await Save11(
                     imageFile,
                   );
 
                   Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) => ShowProfile()));
-                  /*    setState(() {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ShowProfile(data: data)));
-                  });*/
-                  //   _status = true;
-
-                  //   // FocusScope.of(context).requestFocus(new FocusNode());
-
-                  //   // imageFile
-                  //   /* ShowProfile(valProvince, valroles, valspec,
-                  //       addressController.text, bioController.text);*/
-                  // });*/
+             
                 },
                 shape: new RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(20.0)),
@@ -213,9 +168,10 @@ class MapScreenState extends State<ProfilePage>
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        body: new Container(
+        body:Container(
             color: Colors.white,
-            child: FutureBuilder<NewsModel>(
+            child:
+             FutureBuilder<NewsModel>(
                 future: _newsModel,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -337,6 +293,14 @@ class MapScreenState extends State<ProfilePage>
                                           )),
                                     ]),
                               ),
+                          
+                          
+                          
+                          
+                          
+                          
+                          
+                          
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Center(
@@ -566,9 +530,29 @@ class MapScreenState extends State<ProfilePage>
                         ),
                       ],
                     );
+               
+               
+               
+               
+               
+               
+               
+               
                   }
+
+
+
+
+
+
+
                   return Container();
                 })));
+ 
+ 
+ 
+ 
+ 
   }
 
   @override
@@ -580,26 +564,19 @@ class MapScreenState extends State<ProfilePage>
 }
 
 Future Save11(File im) async {
-  var data = {
-    '_method': 'PUT',
-    'role_id': '2',
-    'specialization_id': '2',
-    'address': 'Arkweet',
-    'bio': 'i am ggrttrtgdbhft ',
-    'name': 'Banan Babikiir',
-    'state_id': '1'
+    final shared = sharingData();
+     var token =await shared.getinitToken();
+  var headers = {'Accept': 'application/json',
+  'Authorization': 'Bearer $token'
   };
-
-  var headers = {'Accept': 'application/json'};
+ 
   var request = http.MultipartRequest(
       'POST', Uri.parse('http://waaasil.com/care/api/doctors/262'));
-  request.fields['id'] = '262';
+  
   request.fields['_method'] = 'PUT';
-  request.fields['role_id'] = '1';
-  request.fields['specialization_id'] = '1';
+  request.fields['provider_id'] = '2';
   request.fields['address'] = 'gabraaaaa';
-  request.fields['bio'] = 'ya allah';
-  request.fields['name'] = 'BANANAA';
+  request.fields['bio'] = 'I am a hero doctor';
   request.fields['state_id'] = '1';
   request.files.add(await http.MultipartFile.fromPath('image', im.path));
   request.headers.addAll(headers);

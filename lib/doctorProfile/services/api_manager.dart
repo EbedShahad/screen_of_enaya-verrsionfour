@@ -11,6 +11,8 @@ class API_Manager {
   Future<NewsModel> getNews() async {
     var client = http.Client();
     var newsModel;
+/*
+ */
 
     try {
       var response = await client.get(Uri.parse(Strings.news_url));

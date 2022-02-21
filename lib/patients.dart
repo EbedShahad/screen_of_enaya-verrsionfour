@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:screen_of_enaya/doccard.dart';
 import 'package:screen_of_enaya/drawer/header.dart';
 
 import 'Patient/PatientDeatilsMain.dart';
