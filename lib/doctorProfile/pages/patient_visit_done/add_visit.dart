@@ -1,8 +1,14 @@
 //to add visit for patient
 
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:screen_of_enaya/app/genral/style_color.dart';
+import 'package:screen_of_enaya/doctorProfile/pages/patient_visit_done/complintsModel.dart';
 
 class AddVisit extends StatefulWidget {
   AddVisit({Key key}) : super(key: key);
@@ -12,6 +18,13 @@ class AddVisit extends StatefulWidget {
 }
 
 class _AddVisitState extends State<AddVisit> {
+  Future<AllCompliants> _patientModel;
+  final _formKey = GlobalKey<FormState>();
+  void initState() {
+    // _patientModel = Compla_manger().getNews();
+    super.initState();
+  }
+
   DateTime selectedDate = DateTime.now();
 
   List<Widget> _children = [];
@@ -30,46 +43,160 @@ class _AddVisitState extends State<AddVisit> {
   Widget build(BuildContext context) {
     var formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
     List<bool> _value = [false];
-
+    bool isChecked = false;
+    var items = [
+      "Neck pain",
+      "Back Pain",
+      "Headache",
+      "Backache",
+    ];
+     String dropdownvalue = 'Neck pain';  
+  TextEditingController note = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text("patient name and file number "),
-        actions: <Widget>[IconButton(icon: Icon(Icons.add), onPressed: _add)],
+        title: Text("P006"),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(
+                Icons.attach_file_sharp,
+                color: Colors.white,
+                size: 20,
+              ),
+              onPressed: getPdfAndUpload)
+        ],
       ),
       drawer: Drawer(),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Expanded(
-          child: Container(
-            child: Column(
-              children: [
-                Text(formattedDate),
-
-              ],
+      body:
+          // FutureBuilder<AllCompliants>(
+          // future: _patientModel,
+          //  builder: (context, snapshot) {
+          //    print(snapshot.connectionState.toString());
+          //    print(snapshot.data.data[0].name);
+          //   if (snapshot.hasData) {
+          //     var checkedValue;
+          //   return
+          Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Expanded(
+            child: Container(
+              child: Column(
+                children: [
+                  Text(
+                    formattedDate,
+                    style: TextStyle(color: mainColor, fontSize: 20),),
+                    Row(
+                      children: [ 
+                        Text("Compliants :          "),
+                        DropdownButton(
+                
+              // Initial Value
+              value: dropdownvalue,
+                
+              // Down Arrow Icon
+              icon: const Icon(Icons.keyboard_arrow_down),    
+                
+              // Array list of items
+              items: items.map((String items) {
+                return DropdownMenuItem(
+                  value: items,
+                  child: Text(items),
+                );
+              }).toList(),
+              onChanged: (String newValue) { 
+                setState(() {
+                  dropdownvalue = newValue;
+                });
+              },
+                  ),
+                      ],
+                    ),
+                     Row(
+                       mainAxisAlignment: MainAxisAlignment.start,
+                       children: [
+                         Text("Notes : ",
+                style: TextStyle(color:textColor, fontSize: 30)),
+                       ],
+                     ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                ),
+                child: Card(
+                  child: TextField(
+                    controller: note,
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                  ),
+                ),
+              ),
+            ),
+                ],
+              ),
             ),
           ),
         ),
       ),
+
+      /*else
+            return Center(
+                child: CircularProgressIndicator(
+              color: mainColor,
+            ));*/
+      // },
     );
   }
 }
-ShowComplaints () async {
-  var headers = {
-  'Accept': 'application/json',
-  'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI1IiwianRpIjoiZGIxZmM2MjA1ZTBiYjg0Yzc2NGJkYWVmODQzODllY2U5NGY3NWQ3NTkxNjE5ZDQyZjhiYzQ1ZGYwMmVjZDk2NzA1YjBmYWYzNDM0YWEzNmYiLCJpYXQiOjE2NDM4NzMyMTYuNjE5MzEyMDQ3OTU4Mzc0MDIzNDM3NSwibmJmIjoxNjQzODczMjE2LjYxOTMxNjEwMTA3NDIxODc1LCJleHAiOjE2NDM4NzY4MTUuNDY0NTAyMDk2MTc2MTQ3NDYwOTM3NSwic3ViIjoiMjIiLCJzY29wZXMiOltdfQ.b1WAnVFjKxVTOjW47gBVu1fb6ZshFSuLEaNWJLoQOvRP3K9Tws5i0I6P_Gx1ZjI0VBReoOcuT0kEpVZqvmbtcFclBdAUX42YR88yG76D8FmLb2cOjRr_VHf9P9bomqj0_9RX4vnZ07pgc5QzSpqHOIB47QidmLBEHtqLGWhetpNv-N_fdY1Um_3PyjWm5EeKSn0tlEP_mjlIbxIzoFJq3AduIF8G2lKPjV58phdmpLmeLKJ07LfrS6fgest2lKQ_GNlpbu6UqCbxC5WTIIBP6oEbZIQFA2DYTrzQby1wqNPQtLNvoSphu42j4fHknDbebQxYR2j17UwClIvcZKzZNBmvQ_totiQ2ols1wNGzFy2ZuIUsQVzuqdW_dmkbduCCy2myF_pIKl-i39PiUNNZbnz9meUUY9dY0OXXOPmG0GPv0ReXM_aTGjlK1hd5BRfWbH4f40Ap1jXeyf_JEevH39ernA5N5Evx46smwe5NUGyYRB3IefAIO8XaPeIl-A2B3huNL4Ne-7oBu-k49c_AjTQNzn5L9epGJXvwqkyRCtaCmZYuOkKUQVsnLKEP3-r3cp2kXyPRjF9t9uFDrLJ79nkVlOZOlmgcdLeKPMSgipiphx7jLUWvLub1LeAfE7CezhZPkfQ2zMsPfV6sQqozG_7i0d_rG1xRlu6AXcn79wM'
-};
-var request = http.Request('GET', Uri.parse('https://waaasil.com/care/api/all-complaints'));
 
-request.headers.addAll(headers);
+Future getPdfAndUpload() async {
+  FilePickerResult result = await FilePicker.platform.pickFiles(
+    allowMultiple: true,
+    type: FileType.custom,
+    allowedExtensions: ['jpg', 'pdf', 'doc'],
+  );
 
-http.StreamedResponse response = await request.send();
-
-if (response.statusCode == 200) {
-  print(await response.stream.bytesToString());
-}
-else {
-  print(response.reasonPhrase);
+  if (result != null) {
+    List<File> files = result.paths.map((path) => File(path)).toList();
+  } else {
+    // User canceled the picker
+  }
 }
 
-}
+// class Compla_manger {
+//   Future<AllCompliants> getNews() async {
+//     var client = http.Client();
+//     var _patientModel;
+//     // final shared = sharingData();
+//     // var token = await shared.getinitToken();
+
+//     try {
+//       var response = await http.get(
+//           Uri.parse(
+//               "var request = http.Request('GET', Uri.parse('http://waaasil.com/care/api/all-complaints'));"),
+//           headers: {
+//             'Accept': 'application/json',
+//             'Authorization':
+//                 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI1IiwianRpIjoiYTQzNDc1OWFhZDY4NzNjYTEyNzk4ZDMzYWZlMTFiNGZiZWNhMDczNDM1Y2RjYzUyMWQ0NjJiZmJkMTYwY2FlZDM0OTZkNDE5M2JhYTQ1NTAiLCJpYXQiOjE2NDU0NTY5NjMuNjcxNDgzMDM5ODU1OTU3MDMxMjUsIm5iZiI6MTY0NTQ1Njk2My42NzE0ODQ5NDcyMDQ1ODk4NDM3NSwiZXhwIjoxNjQ1NDYwNTYzLjY1MjEzNDg5NTMyNDcwNzAzMTI1LCJzdWIiOiIyMiIsInNjb3BlcyI6W119.4thm0GahNiPiaBuucF3wkXcHltdRQ_OyW3LaiStusyamI6aw512RyLlUzQpk-8OXoidtzsyXAoAFDxzipTBbEU2OibBdtw0nY4TW-mY0C46ybvQQRM4lYcy-k2b9IGj_4i_RINEzMgdNEDfT3zDFAvtMRDiJBPd7EinxCebKJisMEsMygYagpmJQ4tdrNRc8xD1FwyUBKmwh-t06f2bcoc8PPX-TgOAhitjnaC82ymtJkqoy_Rc9SvDmfUjxpTrNQjrvKLlREmn63yAeAVko0t8bZughKDRCs9Qm3dYQZZhadQEc5A2MShBbkqZen6tZLDi7wjnFgVSTwmboO4cjlhBapRptWGo1vDnm1kE57sp6pfxMlFXhKcwkos8WmjwZbtN5TaVz9L1m0MnmUfbEBdVoJAsM09HS6NLsHCOBXajIGY7E9HHuCZPiFH_TVc2P2kH8kCT-aLT3I67wgUq6qbEo7Jx2AZWFL5YOWz5u6z0m-1tFIBzsoXpHwemvDXjiYrYPuzolQsAE9JI_cOjMDnISci70iD_jOpjIUs5rK8uzg_FrAS3-DAi7bkbghnm9inE46d6fnNLRb9d55LHMSYoWoE4ISYS8HxM79Yb7pfoQJXsT4ABqnsxxRxF2oET4AEAoKKPmlPCvcF46jy9BrdnT8GiOq5mO5AYUZPYHsMw',
+//           });
+//       print(response.headers);
+//       print(response.statusCode);
+//       print(response.reasonPhrase);
+
+//       if (response.statusCode == 200) {
+//         var jsonString = response.body;
+//         var jsonMap = json.decode(jsonString);
+//         print(jsonMap);
+//         _patientModel = AllCompliants.fromJson(jsonMap);
+//         return _patientModel;
+//       }
+//     } catch (Exception) {
+//       return _patientModel;
+//     }
+
+//     //return _patientModel;
+//   }
+// }

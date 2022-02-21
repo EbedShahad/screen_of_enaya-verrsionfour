@@ -19,7 +19,7 @@ class _PatientProfileState extends State<PatientProfile> {
   Future<PatiantDetails> _patientModel;
   @override
   void initState() {
-    _patientModel = Patient_Api_manger().getNews();
+    _patientModel = Patient_Api_manger().getNews(widget.fileNum);
     super.initState();
   }
 
@@ -27,7 +27,7 @@ class _PatientProfileState extends State<PatientProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('All patient'),
+        title: Text(widget.fileNum),
         backgroundColor: mainColor,
       ),
       drawer: Drawer(),

@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:screen_of_enaya/app/genral/style_color.dart';
 import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:screen_of_enaya/body/examiner_part/models/examnerInfo.dart';
+import 'package:screen_of_enaya/body/examiner_part/pages/Exam.dart';
 import 'package:screen_of_enaya/body/examiner_part/services/examner_manger.dart';
 import 'package:screen_of_enaya/body/patient_part/patient_profile/pages/headerLogo.dart';
 import 'package:screen_of_enaya/body/patient_part/patient_profile/pages/main_profile_patient.dart';
@@ -29,7 +30,7 @@ class _HomeExamnerState extends State<HomeExamner> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:Colors.blue,
+        backgroundColor: Colors.blue,
         title: Text("laboratory "),
       ),
       drawer: Drawer(),
@@ -42,14 +43,13 @@ class _HomeExamnerState extends State<HomeExamner> {
               var dataLenght = snapshot.data.data;
 
               print("has data");
-              // Text("kvffff");
+           
 
               return ListView.separated(
                   shrinkWrap: true,
-                  itemCount: dataLenght.length,
+                  itemCount: 2,
+                  //dataLenght.length,
                   separatorBuilder: (context, index) {
-                    List _myActivities;
-                    String _myActivitiesResult;
                     return Divider(
                       color: Colors.teal,
                       // Theme.of(context).primaryColor,
@@ -57,60 +57,23 @@ class _HomeExamnerState extends State<HomeExamner> {
                   },
                   itemBuilder: (context, index) {
                     var drugid = snapshot.data.data[index].tests[index].name;
-                    var drugs = [
-                      {
-                        "id": 1,
-                        "name": "Pandol",
-                        "created_at": null,
-                        "updated_at": null
-                      },
-                      {
-                        "id": 2,
-                        "name": "Antibiotic",
-                        "created_at": null,
-                        "updated_at": null
-                      },
-                      {
-                        "id": 3,
-                        "name": "penicillin Injection",
-                        "created_at": null,
-                        "updated_at": null
-                      },
-                      {
-                        "id": 4,
-                        "name": "Cardioflux",
-                        "created_at": null,
-                        "updated_at": null
-                      },
-                      {
-                        "id": 5,
-                        "name": "Panadole Extra",
-                        "created_at": "2022-02-08T19:45:57.000000Z",
-                        "updated_at": "2022-02-08T19:45:57.000000Z"
-                      },
-                      {
-                        "id": 6,
-                        "name": "Panadole Extra",
-                        "created_at": "2022-02-08T19:46:20.000000Z",
-                        "updated_at": "2022-02-08T19:46:20.000000Z"
-                      }
-                    ];
-                //     String druggy = drugs[drugid]["name"];
-                //     var patientName =
-                //         snapshot.data.data[index].patient.user.name;
-                //     var patientFile =
-                //         snapshot.data.data[index].patient.fileNumber;
-                //     var presStatus = snapshot.data.data[index].status;
-                //     var desc = snapshot.data.data[index].discription.toString();
+
+                    //     String druggy = drugs[drugid]["name"];
+                    //     var patientName =
+                    //         snapshot.data.data[index].patient.user.name;
+                    //     var patientFile =
+                    //         snapshot.data.data[index].patient.fileNumber;
+                    //     var presStatus = snapshot.data.data[index].status;
+                    //     var desc = snapshot.data.data[index].discription.toString();
 
                     var status = snapshot.data.data[index].status.toString();
-                //     var date = snapshot.data.data[index].date;
-                // //    var quan = snapshot.data.data[index].quantity.toString();
-                //     final DateFormat formatter = DateFormat('yyyy-MM-dd');
-                //     final String formatted = formatter.format(date);
-                //     String prescripId = snapshot.data.data[index].id.toString();
-                //     print(status + " kkkkkk");
-                //     // if (status == "1")
+                    var date = snapshot.data.data[index].date;
+                    // //    var quan = snapshot.data.data[index].quantity.toString();
+                    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+                    final String formatted = formatter.format(date);
+                    //     String prescripId = snapshot.data.data[index].id.toString();
+                    //     print(status + " kkkkkk");
+                    //     // if (status == "1")
 
                     //     bColor = Colors.green;
                     if (status == "0") {
@@ -126,7 +89,7 @@ class _HomeExamnerState extends State<HomeExamner> {
                                   Row(
                                     children: [
                                       Text(
-                                       " formatted",
+                                        formatted,
                                         style: TextStyle(
                                             color: textColor,
                                             fontWeight: FontWeight.bold),
@@ -138,84 +101,73 @@ class _HomeExamnerState extends State<HomeExamner> {
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Icon(
-                                          Icons.medical_services_outlined,
-                                          color: mYellowColor,
+                                          Icons.bloodtype,
+                                          color: Colors.pink,
                                         ),
                                       ),
                                       Text(
-                                        "patientName",
+                                        "Lab Test",
                                         style: TextStyle(color: textColor),
                                       ),
-                                      Spacer(),
-                                      Text(
-                                       " patientFile",
-                                        style: TextStyle(color: textColor),
-                                      ),
+                                      // Spacer(),
+                                      // Text(
+                                      //  " patientFile",
+                                      //   style: TextStyle(color: textColor),
+                                      // ),
                                     ],
                                   ),
                                   Divider(),
                                   Row(
                                     children: [
                                       Text(
-                                        "Patinet Name : ",
+                                        "Notes : ",
                                         style: TextStyle(color: textColor),
                                       ),
                                       Text(
-                                        "patientName",
+                                        snapshot.data.data[index].notes,
                                         style: TextStyle(color: textColor),
                                       ),
                                     ],
                                   ),
                                   Row(
                                     children: [
-                                      Text("Decription : ", style: TextStyle(color: textColor)),
+                                      Text(" Tests : ",
+                                          style: TextStyle(color: textColor)),
                                       Text(
-                                        "desc",
-                                         style: TextStyle(color: textColor),
+                                        snapshot
+                                            .data.data[index].tests[index].name
+                                            .toString(),
+                                        style: TextStyle(color: textColor),
                                         maxLines: 3,
                                         softWrap: true,
                                       ),
                                     ],
                                   ),
-                                  Row(
-                                    children: [
-                                      Text("Drugs  : ", style: TextStyle(color: textColor)),
-                                      Text(
-                                      "  druggy",
-                                        maxLines: 3,
-                                        softWrap: true,
-                                         style: TextStyle(color: textColor),
-                                      ),
-                                    ],
-                                  ),
-                                     Row(
-                                    children: [
-                                      Text("Quanity  : ", style: TextStyle(color: textColor),),
-                                      Text(
-                                        "quan",
-                                        maxLines: 3,
-                                        softWrap: true,
-                                      ),
-                                    ],
-                                  ),
+                                 
                                   //  Spacer(),
                                   InkWell(
                                     onTap: () {
-                                      showAlertDialog(context, "prescripId");
+                                       Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Exam()));
                                     },
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Spacer(),
-                                        Text(
-                                          "Done",
-                                          style: TextStyle(color: bColor),
-                                        ),
+                        
+                                       
+                                        CircleAvatar(
+                                          backgroundColor: Colors.white10,
+                                          child:
                                         Icon(
-                                          Icons.check,
-                                          color: bColor,
-                                        ),
+                                          Icons.add,
+                                          color: Colors.pink,
+                                        ), ),
+                                       
                                       ],
                                     ),
                                   ),

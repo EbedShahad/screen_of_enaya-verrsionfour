@@ -38,7 +38,8 @@ class _HomePatientState extends State<HomePatient> {
              // Text("kvffff");
               return ListView.separated(
                   shrinkWrap: true,
-                  itemCount: dataLenght.length,
+                  itemCount:3,
+                  // dataLenght.length,
                   separatorBuilder: (context, index) {
                     return Divider(
                       color:Colors.teal,
@@ -54,7 +55,8 @@ class _HomePatientState extends State<HomePatient> {
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
                         onTap:(){ Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => PatientProfile()));},
+              MaterialPageRoute(builder: (context) => PatientProfile(fileNum:patientFile,
+                      )));},
                         child: ListTile(
                                       leading: CircleAvatar(
                                         //    radius: 10,

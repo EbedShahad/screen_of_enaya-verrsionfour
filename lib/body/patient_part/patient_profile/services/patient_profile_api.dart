@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:screen_of_enaya/app/genral/sharepref.dart';
 import 'package:screen_of_enaya/app/token/refresh_tomen.dart';
@@ -8,6 +7,7 @@ import 'package:screen_of_enaya/body/patient_part/patient_profile/models/patient
 
 // ignore: camel_case_types
 class Patient_Api_manger {
+
   String token;
   @override
   void initState() {
@@ -15,7 +15,7 @@ class Patient_Api_manger {
     //  token= createPasswordToken();
   }
 
-  Future<PatiantDetails> getNews() async {
+  Future<PatiantDetails> getNews(String fileNum) async {
     var client = http.Client();
     var _patientModel;
     final shared = sharingData();
@@ -23,7 +23,7 @@ class Patient_Api_manger {
 
     try {
       var response = await http.get(
-          Uri.parse("var request = http.Request('GET', Uri.parse('https://waaasil.com/care/api/patient-info?file_number=P0005'));"),
+          Uri.parse("var request = http.Request('GET', Uri.parse('https://waaasil.com/care/api/patient-info?$fileNum'));"),
           headers: {
             'Accept': 'application/json',
             'Authorization':

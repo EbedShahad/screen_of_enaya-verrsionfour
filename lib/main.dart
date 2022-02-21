@@ -59,7 +59,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       // theme: _buildShrineTheme(),
       title: 'Care',
-      home:Exam(),
+      home:AddVisit(),
+      //MainaddPatient(),
       //HomeExamner(),
       //MainProfilePatient(),
       //HomePatient(),
