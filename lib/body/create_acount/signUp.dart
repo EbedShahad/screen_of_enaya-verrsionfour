@@ -1,18 +1,13 @@
-// hassan create acount
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:screen_of_enaya/app/genral/api_url.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:screen_of_enaya/app/genral/sharepref.dart';
 import 'package:screen_of_enaya/app/genral/style_color.dart';
 import 'package:screen_of_enaya/app/register_Pages/register_screens/input_decor.dart';
 import 'package:screen_of_enaya/app/token/refresh_tomen.dart';
-import 'package:screen_of_enaya/app/token/token_deal.dart';
-import 'package:screen_of_enaya/doctorProfile/pages/new_p/new_view.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:screen_of_enaya/doctorProfile/pages/new_p/complete_profile.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -21,61 +16,28 @@ class SignUp extends StatefulWidget {
 
 // ignore: camel_case_types
 class _SignUpState extends State<SignUp> {
-  static var token;
-  @override
-//   void initState() {
-// createToken();
-//     super.initState();
-
-//   }
-  // Toke toke ;
+  String token = coldToken();
+  final box = GetStorage();
   final formKey = GlobalKey<FormState>();
-  bool Loading = false;
-  dynamic dropkeyValue = '+249';
-  String PhoneNum;
-  String Password;
+  // bool Loading = false;
+ String dropkeyValue = '+249';
+  String phoneNum;
+  String password;
   var passwordCOntroller = TextEditingController();
-  var PassowrdErrorText;
+  var passWordError;
   var phoneCOntroller = TextEditingController();
-  int confermPassword;
-  String errorText = null;
-  bool passowrdVisability = true;
+  int confermpassword;
+  String errorText;
+  bool passowrdVisability =false;
   bool confirmPassowrdVisability = true;
+  //fries large 700
+  ////barbcue  1050
+  /////cheese 2730       => 3330
+  /// 3300
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  dynamic dropGenderValue = '1';
-  String _mySelection = "1";
-
-  // final String url = "http://webmyls.com/php/getdata.php";
-
-  // List data =List();
-
-  // Future<String> getSWData() async {
-  //   final shared = sharingData();
-  //   token = await shared.getinitToken();
-  //   print("inside Role id ");
-  //     var res  = await http.get(
-  //       Uri.parse("https://waaasil.com/care/api/all-roles"),
-  //       headers: {
-  //         'Accept': 'application/json',
-  //         'Authorization': 'Bearer $token'
-  //       });
-  //       print(res.reasonPhrase);
-  //   // var res = await http
-  //   //     .get(Uri(path: "https://waaasil.com/care/api/all-roles"), headers: {
-  //   //   'Accept': 'application/json',
-  //   //   'Authorization': 'Bearer $token'
-  //   // });
-  //   var resBody = json.decode(res.body);
-
-  //   setState(() {
-  //     data = resBody.map();
-  //   });
-
-  //   print(resBody);
-
-  //   return "Sucess";
-  // }
+ String dropGenderValue = "2";
+  String _myRole = "1";
 
   bool validatePassowrdStructure(String value) {
     String pattern = r'^(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
@@ -89,15 +51,17 @@ class _SignUpState extends State<SignUp> {
     return regExp.hasMatch(value);
   }
 
-  @override
-  void initState() {
-    super.initState();
-    // this.getSWData();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // this.getSWData();
+  // }
 
-  @override
+ 
+  // ignore: non_constant_identifier_names
   NewUser(String name, String email, String phone, String password,
       String gender, String role) async {
+        
     /**
          * here we must save in shared prefs 
    "role_id": "3"
@@ -106,18 +70,19 @@ class _SignUpState extends State<SignUp> {
 *****************************
 
          */
-    final shared = sharingData();
-    token = await shared.getinitToken();
+  //  final shared = sharingData();
+  //  token = await shared.getinitToken();
     print("inside login Signup");
     Map data1 = {
       'name': name,
       'password': password,
       'email': email,
-      'gender_id': '1',
-      'role_id': '1',
+      'gender_id':'1',
+      'role_id': '3',
       'user_phone': phone
     };
-
+    //doctor email : shooda2017@hotmail.com 
+// phone :0993725915
     print(" token will be printed $token");
     //done
     var response1 = await http.post(
@@ -133,15 +98,9 @@ class _SignUpState extends State<SignUp> {
       switch (jsonResponse["code"]) {
         case 200:
           print("user found ya shahad");
-          shared.addUserid(
-              jsonResponse["data"]["provider"]["user_id"].toString());
-          shared
-              .addProviderId(jsonResponse["data"]["provider"]["id"].toString());
-          shared.addRoleId(
-              jsonResponse["data"]["provider"]["role_id"].toString());
-          shared.addDocEmail(email);
-          shared.addDocPass(password);
-          createPasswordToken();
+          box.write('name', name);
+          box.write('userid',jsonResponse["data"]["provider"]["user_id"].toString());
+          box.write('providerid',jsonResponse["data"]["provider"]["id"].toString());
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -162,6 +121,16 @@ class _SignUpState extends State<SignUp> {
       print(response1.reasonPhrase);
     }
     print("hello  from sign in  after share ");
+  }String validateEmail(String value) {
+    String pattern =
+        r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+        r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+        r"{0,253}[a-zA-Z0-9])?)*$";
+    RegExp regex = RegExp(pattern);
+    if (value == null || value.isEmpty || !regex.hasMatch(value))
+      return 'Enter a valid email address';
+    else
+      return null;
   }
 
   @override
@@ -202,10 +171,10 @@ class _SignUpState extends State<SignUp> {
                                         flex: 10,
                                         child: TextFormField(
                                           controller: emailController,
-                                          validator: (value) =>
-                                              value.isEmpty || value == null
-                                                  ? 'Email'
-                                                  : null,
+                                          validator: (value) => validateEmail(value),
+                                              // value.isEmpty || value == null
+                                              //     ? 'Email'
+                                              //     : null,
                                           decoration: buildInputDecoration(
                                               Icons.email, 'Email'),
                                         ),
@@ -247,44 +216,31 @@ class _SignUpState extends State<SignUp> {
                                         child: DropdownButtonHideUnderline(
                                           child: DropdownButton(
                                             underline: SizedBox(),
-                                            value: _mySelection,
+                                            value: _myRole,
                                             items: [
                                               DropdownMenuItem(
-                                                child: Text('Doctor'),
+                                                child: InkWell(child: Text('Doctor')),
                                                 value: '1',
                                               ),
                                               DropdownMenuItem(
-                                                child: Text('Pharmacist'),
+                                                child: InkWell(child: Text('Pharmacist')),
                                                 value: '2',
                                               ),
-                                               DropdownMenuItem(
-                                                child: Text('labotry'),
+                                              DropdownMenuItem(
+                                                child: InkWell(child: Text('labotry')),
                                                 value: '3',
                                               ),
                                             ],
                                             onChanged: (value) {
                                               setState(() {
-                                                _mySelection = value;
+                                                _myRole = value;
                                               });
                                             },
                                           ),
                                         ),
                                       ),
                                     ),
-                                    // DropdownButton(
-                                    //   items: data.map((item) {
-                                    //     return new DropdownMenuItem(
-                                    //       child: new Text(item['data']['name']),
-                                    //       value: item['data']['id'].toString(),
-                                    //     );
-                                    //   }).toList(),
-                                    //   onChanged: (newVal) {
-                                    //     setState(() {
-                                    //       _mySelection = newVal;
-                                    //     });
-                                    //   },
-                                    //   value: _mySelection,
-                                    // ),
+                                  
                                   ],
                                 ),
                                 Row(
@@ -332,25 +288,26 @@ class _SignUpState extends State<SignUp> {
                                         flex: 2,
                                         child: Padding(
                                           padding:
-                                              const EdgeInsets.only(top: 23.0),
-                                          child: DropdownButton(
-                                            value: dropkeyValue,
-                                            items: [
-                                              DropdownMenuItem(
-                                                child: Text('+249'),
-                                                value: '+249',
-                                              ),
-                                              DropdownMenuItem(
-                                                child: Text('+197'),
-                                                value: '+197',
-                                              )
-                                            ],
-                                            onChanged: (value) {
-                                              setState(() {
-                                                dropkeyValue = value;
-                                              });
-                                            },
-                                          ),
+                                              const EdgeInsets.only(top:.0),
+                                              child: Text("+249",style: TextStyle(fontSize: 18),),
+                                          // child: DropdownButton(
+                                          //   value: dropkeyValue,
+                                          //   items: [
+                                          //     DropdownMenuItem(
+                                          //       child: Text('+249'),
+                                          //       value: '+249',
+                                          //     ),
+                                          //     DropdownMenuItem(
+                                          //       child: Text('+197'),
+                                          //       value: '+197',
+                                          //     )
+                                          //   ],
+                                          //   onChanged: (value) {
+                                          //     setState(() {
+                                          //       dropkeyValue = value;
+                                          //     });
+                                          //   },
+                                          // ),
                                         ),
                                       ),
                                       SizedBox(
@@ -361,7 +318,7 @@ class _SignUpState extends State<SignUp> {
                                       ////* ========phone Number or Email ======*/
                                       /////////////////////////////////////////////////////////
                                       Expanded(
-                                        flex: 4,
+                                        flex: 6,
                                         child: TextFormField(
                                           maxLength: 9,
                                           keyboardType: TextInputType.number,
@@ -372,7 +329,7 @@ class _SignUpState extends State<SignUp> {
                                           // keyboardType: TextInputType.phone,
                                           controller: phoneCOntroller,
                                           onChanged: (value) {
-                                            PhoneNum = value;
+                                            phoneNum = value;
                                           },
                                           validator: (value) {
                                             if (value.isEmpty ||
@@ -381,19 +338,15 @@ class _SignUpState extends State<SignUp> {
                                             } else {
                                               if (!validatePhoneStructure(
                                                   value)) {
-                                                return 'Enter Phone number';
+                                                return 'Phone';
                                               } else {
                                                 return null;
                                               }
                                             }
                                           },
                                           decoration: buildInputDecoration(
-                                              Icons.phone, 'Phone Number'),
-                                          //  InputDecoration(
-                                          //     labelText: 'Phone Number',
-                                          //     labelStyle: TextStyle(
-                                          //       color: Colors.grey,
-                                          //     ),),
+                                              Icons.call, 'Phone Number'),
+                                         
                                         ),
                                       ),
                                     ],
@@ -405,7 +358,7 @@ class _SignUpState extends State<SignUp> {
                                 TextFormField(
                                   controller: passwordCOntroller,
                                   onChanged: (value) {
-                                    value = Password.toString();
+                                    value = password.toString();
                                   },
                                   validator: (value) => value.isEmpty ||
                                           value == null ||
@@ -414,7 +367,7 @@ class _SignUpState extends State<SignUp> {
                                       ? 'password should contains at \n leats 8 characters \n at least 1 sign'
                                       : null,
                                   decoration: InputDecoration(
-                                      hintText: "Enter Password",
+                                      hintText: "Enter password",
                                       prefixIcon: Icon(
                                         Icons.lock,
                                         color: mainColor,
@@ -454,8 +407,8 @@ class _SignUpState extends State<SignUp> {
                                           });
                                         },
                                       ),
-                                      errorText: PassowrdErrorText,
-                                      labelText: 'Password',
+                                      errorText: passWordError,
+                                      labelText: 'password',
                                       labelStyle: TextStyle(
                                         color: Colors.grey,
                                       )),
@@ -467,12 +420,12 @@ class _SignUpState extends State<SignUp> {
                                     if (value.isEmpty ||
                                         value == null ||
                                         value != passwordCOntroller.text) {
-                                      return 'ppassword not match';
+                                      return 'password not match';
                                     } else
                                       return null;
                                   },
                                   decoration: InputDecoration(
-                                      hintText: "Enter Password",
+                                      hintText: "Enter password",
                                       prefixIcon: Icon(
                                         Icons.lock,
                                         color: mainColor,
@@ -501,7 +454,7 @@ class _SignUpState extends State<SignUp> {
                                       ),
                                       suffixIcon: IconButton(
                                         icon:
-                                            Icon(Icons.remove_red_eye_outlined),
+                                            Icon(Icons.remove_red_eye_outlined,color: mainColor,),
                                         onPressed: () {
                                           setState(() {
                                             confirmPassowrdVisability
@@ -513,7 +466,7 @@ class _SignUpState extends State<SignUp> {
                                         },
                                       ),
                                       errorText: errorText,
-                                      labelText: 'Confirm Password',
+                                      labelText: 'Confirm password',
                                       labelStyle: TextStyle(
                                         color: Colors.grey,
                                       )),
@@ -535,13 +488,19 @@ class _SignUpState extends State<SignUp> {
                                     onPressed: () async {
                                       print("pressed");
                                       if (formKey.currentState.validate()) {
+                                        print( nameController.text+
+                                            emailController.text+
+                                            phoneCOntroller.text+
+                                            passwordCOntroller.text+
+                                            dropGenderValue+
+                                            _myRole+ "data before send ");
                                         NewUser(
                                             nameController.text,
                                             emailController.text,
                                             phoneCOntroller.text,
                                             passwordCOntroller.text,
-                                            dropkeyValue,
-                                            _mySelection);
+                                            dropGenderValue,
+                                            _myRole);
                                       }
                                     }),
                               ],

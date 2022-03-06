@@ -1,10 +1,14 @@
 import 'dart:convert';
-
+// form validation
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+
+import 'package:screen_of_enaya/mainData.dart';
+
 import 'package:screen_of_enaya/app/genral/style_color.dart';
+import 'package:screen_of_enaya/app/token/refresh_tomen.dart';
 import 'package:screen_of_enaya/body/patient_part/add_new_patient/genrate_password.dart';
 import 'package:screen_of_enaya/body/patient_part/add_new_patient/add_medical_info.dart';
 
@@ -55,8 +59,7 @@ class _MainaddPatientState extends State<MainaddPatient> {
       String job,
       String blood,
       String height,
-      String date) async 
-      {
+      String date) async {
     print("inside login Signup");
     Map data1 = {
       'name': name,
@@ -75,10 +78,14 @@ class _MainaddPatientState extends State<MainaddPatient> {
 // token= await shared.getinitToken();
 //     print(" token will be printed $token");
     //done'Authorization': 'Bearer $token'
+    String token = coldToken();
     var response1 = await http.post(
         Uri.parse("https://waaasil.com/care/api/new-patient"),
         body: data1,
-        headers: {'Accept': 'application/json', 'Authorization': 'Bearer'});
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        });
     if (response1.statusCode == 200) {
       print(response1.body);
       var jsonResponse = await json.decode(response1.body);
@@ -88,21 +95,23 @@ class _MainaddPatientState extends State<MainaddPatient> {
           print(jsonResponse["data"]);
           // shared.addPatientName(
           //     jsonResponse["data"]["User"]["name"].toString());
+          String name=jsonResponse["data"]["User"]["name"];
+               String filenum= jsonResponse["data"]["Patient"]["file_number"].toString();
+               String pid= jsonResponse["data"]["Patient"]["id"].toString();
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (_) => PatienMedicalInfo(
-                  //  p_name: "ali",
-                  // // p_name: jsonResponse["data"]["User"]["name"],
-                  //  p_file_no:"P0039",
-                  // p_file_no:jsonResponse["data"]["Patient"]["file_number"],
-                  //p_id:jsonResponse["data"]["Patient"]["id"],
-                  ),
+                p_name: name,
+                p_file_no:filenum,
+                p_id:pid,
+              ),
             ),
           );
           break;
         case 500:
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.teal,
             content: Text('This user Already exist'),
           ));
           print("user found la la la  shahad");
@@ -129,7 +138,7 @@ class _MainaddPatientState extends State<MainaddPatient> {
 
   TextEditingController pass = TextEditingController();
 
-  TextEditingController pincode = TextEditingController();
+  // TextEditingController pincode = TextEditingController();
 
   List<Step> stepList() => [
         Step(
@@ -424,7 +433,9 @@ class _MainaddPatientState extends State<MainaddPatient> {
         Step(
             state: StepState.complete,
             isActive: _activeStepIndex >= 2,
-            title: const Text('Confirm'),
+            title: InkWell(child: const Text('Confirm'), onTap: (){
+                //  phone.text.isEmpty ? null : () => _onShare(context);
+            },),
             content: Container(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -437,7 +448,7 @@ class _MainaddPatientState extends State<MainaddPatient> {
                 Text('Password:  $password'),
                 Text('Material Status : ${material.text}'),
                 Text('Job title : ${job.text}'),
-                Text('PinCode : ${pincode.text}'),
+               // Text('PinCode : ${pincode.text}'),
                 /*TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController phone = TextEditingController();
@@ -538,4 +549,15 @@ class _MainaddPatientState extends State<MainaddPatient> {
       ),
     );
   }
+//   void _onShare(BuildContext context) 
+//   async {
+//     final box = context.findRenderObject() as RenderBox;
+//     await Share.share(password+mobilePhone,
+//         //subject: link,
+//         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+//   }
+// }
+
+
 }
+

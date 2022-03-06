@@ -1,12 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:screen_of_enaya/app/genral/style_color.dart';
+import 'package:http/http.dart' as http;
 import 'package:multiselect_formfield/multiselect_formfield.dart';
+import 'package:screen_of_enaya/body/genral/app_local_storage/token.dart';
 import 'package:screen_of_enaya/body/patient_part/patient_profile/pages/headerLogo.dart';
 import 'package:screen_of_enaya/body/patient_part/patient_profile/pages/main_profile_patient.dart';
 import 'package:screen_of_enaya/body/patient_part/patient_profile/pages/myheader.dart';
 import 'package:screen_of_enaya/body/pharmicy_part/showAllPres/models/prescriptionInfo.dart';
+import 'package:screen_of_enaya/body/pharmicy_part/showAllPres/pages/all_drugs.dart';
 import 'package:screen_of_enaya/body/pharmicy_part/showAllPres/services/pre_manger.dart';
 
 class HomePrescription extends StatefulWidget {
@@ -16,40 +22,117 @@ class HomePrescription extends StatefulWidget {
 
 class _HomePrescriptionState extends State<HomePrescription> {
   Future<AllPrescription> _patientModel;
+  List<AllDrugs> drugList;
+  String token;
 
-  var _myActivities;
   @override
   void initState() {
+    final box = GetStorage();
+    createPasswordToken();
+    token = box.read('token2');
+    poviderid = box.read('providerid');
+    print("providerid");
+    // fetchPost();
+   // getSWData();
+  //  print(dataa);
     _patientModel = Presc_Manger().getNews();
     super.initState();
   }
+
+  String _mySelection;
+  var data ;
+    Future<List<AllDrugs> > fetchPost() async {
+    // final response =
+    // await http.get('http://alkadhum-col.edu.iq/wp-json/wp/v2/posts/');
+        var uri =
+    Uri.https('www.waaasil.com','/care/api/all-drugs');
+  
+var response = await http.get(uri, headers: {
+          'Accept':'application/json',
+          'Authorization':'Bearer $token',
+        });
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      var values;
+      values = json.decode(response.body);
+      if(values.length>0){
+        for(int i=0;i<values.length;i++){
+          if(values[i]!=null){
+            Map<String,dynamic> map=values[i];
+            drugList .add(AllDrugs.fromJson(map));
+            debugPrint('Id-------${map['data']}');
+          }
+        }
+      }
+      return drugList;
+
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load post');
+    }
+  }
+  getSWData() async {
+    print("inside drusssss");
+    // var res = await http.get(
+    //     Uri(path: "https://waaasil.com/care/api/all-drugs"),
+    //     headers: {
+    //       "Accept": "application/json",
+    //       'Authorization': 'Bearer $token',
+    //     });
+        var uri =
+    Uri.https('www.waaasil.com','/care/api/all-prescriptions');
+  
+var res = await http.get(uri, headers: {
+          'Accept':'application/json',
+          'Authorization':'Bearer $token',
+        });
+print(res.statusCode);
+        print(res.body.toString());
+    var resBody = json.decode(res.body);
+
+    setState(() {
+      data = resBody;
+    });
+    print("resBody**************");
+    print(resBody);
+
+    return "Sucess";
+  }
+
+  var _myActivities;
+  String poviderid;
+  // String _mySelection;
+ // final String url = "https://waaasil.com/care/api/prescription-status/";
+  // var response = await http.get(uri, headers: {
+  //         'Accept':'application/json',
+  //         'Authorization':'Bearer $token',
+  //       });
 
   Color bColor = Colors.grey;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.teal,
-        title: Text("Pharmacy"),
-      ),
+          backgroundColor: Colors.teal,
+          title: Row(
+            children: [
+              Text("Pharmacy"),
+            ],
+          )),
       drawer: Drawer(),
       body: Container(
         child: FutureBuilder<AllPrescription>(
           future: _patientModel,
           builder: (context, snapshot) {
             print(snapshot.connectionState.toString());
+            print(snapshot.data.toString());
             if (snapshot.hasData) {
               var dataLenght = snapshot.data.data;
-
               print("has data");
-              // Text("kvffff");
-
               return ListView.separated(
                   shrinkWrap: true,
                   itemCount: dataLenght.length,
                   separatorBuilder: (context, index) {
-                    List _myActivities;
-                    String _myActivitiesResult;
                     return Divider(
                       color: Colors.teal,
                       // Theme.of(context).primaryColor,
@@ -137,11 +220,17 @@ class _HomePrescriptionState extends State<HomePrescription> {
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
-                                        child: Icon(
-                                          Icons.medical_services_outlined,
-                                          color: mYellowColor,
+                                        child: Image(
+                                          image: AssetImage("images/pharm.png"),
+                                          width: 35,
+                                          height: 35,
                                         ),
                                       ),
+                                      // Icon(
+                                      //   Icons.medical_services_outlined,
+                                      //   color: mYellowColor,
+                                      // ),
+
                                       Text(
                                         patientName,
                                         style: TextStyle(color: textColor),
@@ -168,10 +257,11 @@ class _HomePrescriptionState extends State<HomePrescription> {
                                   ),
                                   Row(
                                     children: [
-                                      Text("Decription : ", style: TextStyle(color: textColor)),
+                                      Text("Decription : ",
+                                          style: TextStyle(color: textColor)),
                                       Text(
                                         desc,
-                                         style: TextStyle(color: textColor),
+                                        style: TextStyle(color: textColor),
                                         maxLines: 3,
                                         softWrap: true,
                                       ),
@@ -179,18 +269,22 @@ class _HomePrescriptionState extends State<HomePrescription> {
                                   ),
                                   Row(
                                     children: [
-                                      Text("Drugs  : ", style: TextStyle(color: textColor)),
+                                      Text("Drugs  : ",
+                                          style: TextStyle(color: textColor)),
                                       Text(
                                         druggy,
                                         maxLines: 3,
                                         softWrap: true,
-                                         style: TextStyle(color: textColor),
+                                        style: TextStyle(color: textColor),
                                       ),
                                     ],
                                   ),
-                                     Row(
+                                  Row(
                                     children: [
-                                      Text("Quanity  : ", style: TextStyle(color: textColor),),
+                                      Text(
+                                        "Quanity  : ",
+                                        style: TextStyle(color: textColor),
+                                      ),
                                       Text(
                                         quan,
                                         maxLines: 3,
@@ -201,7 +295,7 @@ class _HomePrescriptionState extends State<HomePrescription> {
                                   //  Spacer(),
                                   InkWell(
                                     onTap: () {
-                                      showAlertDialog(context, prescripId);
+                                      showAlertDialog(context, prescripId,status);
                                     },
                                     child: Row(
                                       mainAxisAlignment:
@@ -309,8 +403,48 @@ class _HomePrescriptionState extends State<HomePrescription> {
   }
 }
 
-void ChangePrescripStatus(String prescId) {}
-showAlertDialog(BuildContext context, String pres) {
+// ignore: non_constant_identifier_names
+ ChangePrescripStatus(String prescId,String status) async {
+   final box =GetStorage();
+   String token;
+    token = box.read('token2');
+//    var headers = {
+//   'Authorization': 'Bearer $token',
+//   'Accept': 'application/json'
+// }; 
+final queryParameters = {
+  'prescrip_id':prescId,
+  'status':status,
+};
+var uri =
+    Uri.https('www.waaasil.com','/care/api/prescription-status', queryParameters);
+  
+var response = await http.get(uri, headers: {
+          'Accept':'application/json',
+          'Authorization':'Bearer $token',
+        });
+if (response.statusCode==200){
+  print(response.body);
+  print("updated ");
+}
+else {
+print("notfound");
+}
+//var request = http.Request('GET', Uri.parse('https://waaasil.com/care/api/prescription-status?prescrip_id=6&status=1'));
+
+//request.headers.addAll(headers);
+
+// http.StreamedResponse response = await request.send();
+
+// if (response.statusCode == 200) {
+//   print(await response.stream.bytesToString());
+// }
+// else {
+//   print(response.reasonPhrase);
+// }
+
+ }
+showAlertDialog(BuildContext context, String pres ,String status) {
   // set up the button
   Widget okButton = TextButton(
     child: Text(
@@ -318,7 +452,7 @@ showAlertDialog(BuildContext context, String pres) {
       style: TextStyle(color: Colors.teal),
     ),
     onPressed: () {
-      ChangePrescripStatus(pres);
+      ChangePrescripStatus(pres,"1");
     },
   );
   Widget noButton = TextButton(
@@ -326,7 +460,9 @@ showAlertDialog(BuildContext context, String pres) {
       "No",
       style: TextStyle(color: Colors.teal),
     ),
-    onPressed: () {},
+    onPressed: () {
+       ChangePrescripStatus(pres,"0");
+    },
   );
 
   // set up the AlertDialog

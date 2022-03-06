@@ -1,5 +1,4 @@
-//done
-//page no 1
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screen_of_enaya/app/genral/stringss.dart';
@@ -147,11 +146,6 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
-
-/*
-the 3 dots at the bottom 
-
- */
 class Pointt extends StatefulWidget {
   Pointt({this.size});
 
@@ -183,9 +177,6 @@ class _PointtState extends State<Pointt> {
   }
 }
 
-/*
-images and texts 
- */
 class ImageCont extends StatefulWidget {
   ImageCont({this.image});
   String image;
@@ -213,22 +204,15 @@ class _ImageContState extends State<ImageCont> {
               ),
             ),
           ),
-          /* SizedBox(
-            height: 20,
-          ),*/
+    
           Text(
             welcomeText1,
-
-            // AppLocalizations.of(context).long,
             style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 20.sp,
               color: textColor,
             ),
           ),
-          /*   SizedBox(
-            height: 10.h,
-          ),*/
           Text(welcometext2,
               style: TextStyle(
                   fontWeight: FontWeight.w400,

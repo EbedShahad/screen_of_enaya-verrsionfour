@@ -15,6 +15,7 @@ class _HomePatientState extends State<HomePatient> {
   Future<AllPatientData> _patientModel;
   @override
   void initState() {
+    
     _patientModel = API_Manager().getNews();
     super.initState();
   }
@@ -35,10 +36,11 @@ class _HomePatientState extends State<HomePatient> {
             if (snapshot.hasData) {
               var dataLenght = snapshot.data.data;
               print("has data");
+              
              // Text("kvffff");
               return ListView.separated(
                   shrinkWrap: true,
-                  itemCount:3,
+                  itemCount:dataLenght.length,
                   // dataLenght.length,
                   separatorBuilder: (context, index) {
                     return Divider(
@@ -47,11 +49,19 @@ class _HomePatientState extends State<HomePatient> {
                     );
                   },
                   itemBuilder: (context, index) {
+                    // int reverse= dataLenght.length;
                     var patientName = snapshot.data.data[index].name;
-                    var patientFile =
-                        snapshot.data.data[index].patient.fileNumber;
+                   
                     print(patientName);
-                    return Padding(
+                      //  reverse =reverse-1;
+                      if (snapshot.data.data[index].patient==null || snapshot.data.data[index].patient.fileNumber==null ){
+                        return Container();
+
+              }
+                  else {
+                     var patientFile =
+                        snapshot.data.data[index].patient.fileNumber;
+                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
                         onTap:(){ Navigator.of(context).push(
@@ -78,59 +88,9 @@ class _HomePatientState extends State<HomePatient> {
                                       ),
                                     ),
                       ),
-                    );
-                    //  Container(
-                    //   decoration: BoxDecoration(
-                    //       color: Colors.white12,
-                    //       borderRadius: BorderRadius.circular(10),
-                    //       border: Border.all(color: Colors.grey)),
-                    //   height: 100,
-                    //   //  height: MediaQuery.of(context).size.height / 3.0,
-                    //   margin: const EdgeInsets.all(8),
-                    //   child: Row(
-                    //     children: <Widget>[
-                    //       SizedBox(width: 16),
-                    //       Flexible(
-                    //         child: Column(
-                    //           crossAxisAlignment:
-                    //               CrossAxisAlignment.start,
-                    //           children: <Widget>[
-                    //             Text(
-                    //               patientFile,
-                    //               style: TextStyle(
-                    //                 fontSize: 20,
-                    //                 fontWeight: FontWeight.bold,
-                    //               ),
-                    //             ),
-                    //             Row(
-                    //               children: [
-                    //                 Icon(
-                    //                   Icons.people,
-                    //                   color: mainColor,
-                    //                 ),
-                    //                 SizedBox(
-                    //                   width: 10,
-                    //                 ),
-                    //                 Text(
-                    //                   patientName,
-                    //                   overflow: TextOverflow.ellipsis,
-                    //                   style: TextStyle(
-                    //                       fontSize: 20,
-                    //                       fontWeight: FontWeight.bold),
-                    //                 ),
-                    //               ],
-                    //             ),
-                    //             /* Text(
-                    //                 gender,
-                    //                 maxLines: 2,
-                    //                 overflow: TextOverflow.ellipsis,
-                    //               ),*/
-                    //           ],
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // );
+                    );}
+                
+                 
                   });
             } else {
               print("Return value");

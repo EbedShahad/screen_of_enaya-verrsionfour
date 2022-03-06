@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:screen_of_enaya/app/genral/style_color.dart';
 import 'package:screen_of_enaya/doctorProfile/pages/patient_visit_done/complintsModel.dart';
+import 'package:screen_of_enaya/doctorProfile/pages/patient_visit_done/patient_choices.dart';
 
 class AddVisit extends StatefulWidget {
   AddVisit({Key key}) : super(key: key);
@@ -55,7 +56,7 @@ class _AddVisitState extends State<AddVisit> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text("P006"),
+        title: Text("P0056"),
         actions: <Widget>[
           IconButton(
               icon: Icon(
@@ -76,71 +77,100 @@ class _AddVisitState extends State<AddVisit> {
           //   if (snapshot.hasData) {
           //     var checkedValue;
           //   return
-          Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Expanded(
-            child: Container(
-              child: Column(
-                children: [
-                  Text(
-                    formattedDate,
-                    style: TextStyle(color: mainColor, fontSize: 20),),
-                    Row(
-                      children: [ 
-                        Text("Compliants :          "),
-                        DropdownButton(
-                
-              // Initial Value
-              value: dropdownvalue,
-                
-              // Down Arrow Icon
-              icon: const Icon(Icons.keyboard_arrow_down),    
-                
-              // Array list of items
-              items: items.map((String items) {
-                return DropdownMenuItem(
-                  value: items,
-                  child: Text(items),
-                );
-              }).toList(),
-              onChanged: (String newValue) { 
-                setState(() {
-                  dropdownvalue = newValue;
-                });
-              },
-                  ),
-                      ],
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Expanded(
+                child: Container(
+                  child: Column(
+                   // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      CircleAvatar(
+                        radius: 100,
+                        backgroundColor:Colors.white,
+                        child: Image(image: AssetImage("images/patients/examination.png"),),
+                      ),
+                        Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Patient Visit",
+                          style: TextStyle(color: mainColor, fontSize: 20),),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          formattedDate,
+                          style: TextStyle(color: mainColor, fontSize: 20),),
+                      ),
+                        Row(
+                          children: [ 
+                            Text("Compliants :          "),
+                            DropdownButton(
+                    
+                  // Initial Value
+                  value: dropdownvalue,
+                    
+                  // Down Arrow Icon
+                  icon: const Icon(Icons.keyboard_arrow_down),    
+                    
+                  // Array list of items
+                  items: items.map((String items) {
+                    return DropdownMenuItem(
+                      value: items,
+                      child: Text(items),
+                    );
+                  }).toList(),
+                  onChanged: (String newValue) { 
+                    setState(() {
+                      dropdownvalue = newValue;
+                    });
+                  },
+                      ),
+                          ],
+                        ),
+                         Row(
+                           mainAxisAlignment: MainAxisAlignment.start,
+                           children: [
+                             Text("Notes : ",
+                    style: TextStyle(color:textColor, fontSize: 30)),
+                           ],
+                         ),
+                Padding(
+          
+          
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(),
                     ),
-                     Row(
-                       mainAxisAlignment: MainAxisAlignment.start,
-                       children: [
-                         Text("Notes : ",
-                style: TextStyle(color:textColor, fontSize: 30)),
-                       ],
-                     ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                ),
-                child: Card(
-                  child: TextField(
-                    controller: note,
-                    maxLines: null,
-                    keyboardType: TextInputType.multiline,
+                    child: Card(
+                      child: TextField(
+                        controller: note,
+                        maxLines:10,
+                        keyboardType: TextInputType.multiline,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-                ],
+                
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-      ),
+      floatingActionButton: FloatingActionButton(onPressed: (){
+           Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => PatientChoices(
+                          //  allStates:jsonResponse["data"]["provider"]["state"],
+                          ),
+                    ),
+                  );
+      },
+      child: Icon(Icons.check,color: Colors.white,),
+      backgroundColor:Colors.teal,),
 
       /*else
             return Center(

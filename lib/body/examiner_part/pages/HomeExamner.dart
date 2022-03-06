@@ -40,14 +40,15 @@ class _HomeExamnerState extends State<HomeExamner> {
           builder: (context, snapshot) {
             print(snapshot.connectionState.toString());
             if (snapshot.hasData) {
-              var dataLenght = snapshot.data.data;
+              var dataLenght = snapshot.data.data.length;
+              // print(dataLenght.length);
 
               print("has data");
            
 
               return ListView.separated(
                   shrinkWrap: true,
-                  itemCount: 2,
+                  itemCount:dataLenght,
                   //dataLenght.length,
                   separatorBuilder: (context, index) {
                     return Divider(

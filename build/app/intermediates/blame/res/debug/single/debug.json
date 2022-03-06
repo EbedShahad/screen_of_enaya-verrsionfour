@@ -8,6 +8,10 @@
         "source": "F:\\flutter\\projects\\screen_of_enaya-main2\\screen_of_enaya-main\\android\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png"
     },
     {
+        "merged": "F:\\flutter\\projects\\screen_of_enaya-main2\\screen_of_enaya-main\\build\\app\\intermediates\\res\\merged\\debug\\drawable_app_icon.png.flat",
+        "source": "F:\\flutter\\projects\\screen_of_enaya-main2\\screen_of_enaya-main\\android\\app\\src\\main\\res\\drawable\\app_icon.png"
+    },
+    {
         "merged": "F:\\flutter\\projects\\screen_of_enaya-main2\\screen_of_enaya-main\\build\\app\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_ic_launcher.png.flat",
         "source": "F:\\flutter\\projects\\screen_of_enaya-main2\\screen_of_enaya-main\\android\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
     },

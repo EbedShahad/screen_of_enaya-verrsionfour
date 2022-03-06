@@ -6,13 +6,17 @@ import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:screen_of_enaya/app/genral/sharepref.dart';
 import 'package:screen_of_enaya/app/genral/stringss.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:screen_of_enaya/app/genral/style_color.dart';
 import 'package:screen_of_enaya/app/register_Pages/register_screens/input_decor.dart';
 import 'package:screen_of_enaya/app/token/refresh_tomen.dart';
 import 'package:screen_of_enaya/body/create_acount/signUp.dart';
+import 'package:screen_of_enaya/body/examiner_part/pages/HomeExamner.dart';
 import 'package:screen_of_enaya/body/forget_pass/forget_pass.dart';
 import 'package:screen_of_enaya/body/forget_pass/reset_password.dart';
 import 'package:screen_of_enaya/body/main_login/inactive_stauts.dart';
+import 'package:screen_of_enaya/body/patient_part/all_patient_view/pages/HomePatient.dart';
+import 'package:screen_of_enaya/body/pharmicy_part/showAllPres/pages/HomePrescripton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MainLogin extends StatefulWidget {
@@ -26,20 +30,18 @@ class _MainLoginState extends State<MainLogin> {
   @override
   void initState() {
     createToken();
-  super.initState();
+    super.initState();
   }
 
   // ignore: non_constant_identifier_names
- 
-  
+
   bool loading = false;
-  final fieldkey1 = GlobalKey<FormState>();
-  @override
+  // final fieldkey1 = GlobalKey<FormState>();
   final forKey = GlobalKey<FormState>();
   String erorText1, errorText2;
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  bool _isLoading = false;
+  // bool _isLoading = false;
   Map<dynamic, dynamic> userExit = {'message': 'User does not exist'};
 
   Widget build(BuildContext context) {
@@ -100,9 +102,7 @@ class _MainLoginState extends State<MainLogin> {
                               )),
                         ),
                         Container(
-                          decoration: BoxDecoration(
-
-                              ),
+                          decoration: BoxDecoration(),
 ///////////////////////////////////////////////////////////
 //* ========phone Number or Email ======*/
 /////////////////////////////////////////////////////////
@@ -122,14 +122,10 @@ class _MainLoginState extends State<MainLogin> {
                                       child: TextFormField(
                                         cursorColor: mainColor,
                                         controller: emailController,
-                                        validator: (value) {
-                                          //  value = erorText1;
-                                          if (value.isEmpty || value == null)
-                                            erorText1 = 'Required';
-                                          // else
-                                          //   erorText1 = "";
-                                          return erorText1;
-                                        },
+                                        validator: (value) =>
+                                            value.isEmpty || value == null
+                                                ? 'Required'
+                                                : null,
                                         decoration: buildInputDecoration(
                                             Icons.person, 'Enter Email '),
                                       ),
@@ -177,7 +173,7 @@ class _MainLoginState extends State<MainLogin> {
                                           },
                                           child: Container(
                                             child: Text(
-                                              'Forget Password your password ?',
+                                              'Forget your password ?',
                                               textAlign: TextAlign.start,
                                               style: TextStyle(
                                                 color: Color(0xFF252B39),
@@ -207,58 +203,24 @@ class _MainLoginState extends State<MainLogin> {
                                             ),
                                           ),
                                           onPressed: () async {
-                                            setState(() async {
-                                             token =await shared.getinitToken().toString();
-                                            });
-                                            
-                                            print(token);
-                                            NewUser("AAA","aaaa",token);
-                                          
+                                            // setState(() async {
+                                            //  token =await shared.getinitToken().toString();
+                                            // });
 
-                                            if (forKey.currentState.validate()) {
+                                            //   print(token);
+
+                                            if (forKey.currentState
+                                                .validate()) {
                                               //  print("validate");
+                                              FocusScope.of(context)
+                                                  .requestFocus(
+                                                      new FocusNode());
                                               setState(() {
                                                 loading = true;
-                                              });}
-                                            //  try {
-                                            //  register login = register();
-
-                                            //  loginApi(
-                                            //   emailController.text,
-                                            //   passwordController.text,
-                                            // );
-
-                                            //sha      print("data dta tat : ");
-                                            //sha   print(data.data);
-                                            //  intAsJson.text = json.encode(data);
-                                            //sha  if (data.data == data)
-                                            /*data !=
-                                                      'Incorrect Credentials' ||
-                                                  data != "User does not exist"*/ //{
-                                            //sha  SharedPreferences prefs =
-                                            //sha      await SharedPreferences
-                                            //sah         .getInstance();
-                                            //sha    prefs.setInt('userId', data);
-                                            //sha        print("hello ");
-                                            //sha            Navigator.pushReplacement(
-                                            //sha             context,
-                                            //sha         MaterialPageRoute(
-//sha builder: (context) =>
-                                            //sha          OTP_Page()));
-                                            //sha          } else {
-                                            //sha        print("hello  elseR");
-                                            //sha       setState(() {
-                                            //sha       loading = false;
-                                            /*     final snackBar = SnackBar(
-                                                      content: Text(
-                                                          'wrong password or Email'));
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(snackBar);
-                                                });
-                                              }
-                                            } catch (e) {
-                                              print(e);
-                                            }*/
+                                              });
+                                              NewUser(emailController.text,
+                                                  passwordController.text);
+                                            }
                                           }),
                                     ),
                                     Column(
@@ -276,8 +238,8 @@ class _MainLoginState extends State<MainLogin> {
                                               'Creat New Account?',
                                               textAlign: TextAlign.start,
                                               style: TextStyle(
-                                                color: Color(0xFF252B39),
-                                              ),
+                                                  color: mainColor,
+                                                  fontSize: 20),
                                             ),
                                           ),
                                         ),
@@ -293,17 +255,6 @@ class _MainLoginState extends State<MainLogin> {
                     ),
                   ),
                 ),
-                // SizedBox(
-                //   height: 10,
-                // ),
-                // must delete it
-                //       InkWell(onTap: (){
-                //           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                //   content: Text("jsonResponse[error]"),
-                //   backgroundColor: Colors.teal,
-                // ));
-                //       },
-                //         child: Text("kjjjjjjjjjjj",)),
               ],
             ),
           ),
@@ -315,118 +266,12 @@ class _MainLoginState extends State<MainLogin> {
 
   //  }
 
-  loginApi(email, pass) async {
-    print("banan test ");
-    var headers = {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
-    };
-
-    /* var headers = {
-  'Accept':'application/json',
-  'Authorization': 'Bearer $token'
-};*/
-// var headers = {
-//   'Accept': 'application/json',
-//   'Authorization': 'Bearer  eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI1IiwianRpIjoiZjgxYzBhNTY0MmNmYjcxMWZkZWVmYTA4ZmQzMDc2ODgyMGEyMGI3MzkwMTMyYzIzODc4NGZiMWNmNDI0OWMzMGNmZDI0NDEyMGY1OGE3NTciLCJpYXQiOjE2NDQzMjI4NTEuNDUzMzYxOTg4MDY3NjI2OTUzMTI1LCJuYmYiOjE2NDQzMjI4NTEuNDUzMzYzODk1NDE2MjU5NzY1NjI1LCJleHAiOjE2NDQzMjY0NTEuNDQ3NjU1OTE2MjEzOTg5MjU3ODEyNSwic3ViIjoiIiwic2NvcGVzIjpbXX0.fWnJh-mOrySBtxLg6lxIO2gAqLQC9yNFzZFstqWmEgKFMAv6OblHGBkT-gKXr8NtS_FJ02Ine9UruIk62DWGMJLlBH9HcHucIul_uWDpuNFYdhtAIlD0NTYs59QPb8VFe6M1IzgdjMonLxYB5tPChPSS-2rvJnfED3szF1-HHhURwCipho2LYpq8If5WBBtvio--SUcZ-eJZZR5Bv0Zw0-dqxgQzJ5HWrjCdUfRZjhZvwjDEOrn0h9iLKSiC3hIxCAoAFLPXlsSWmMp8t0F4xwfhmS4H0APN9wEkSBsTUvR4sFfwGaKxAtGBAKXKqMEWNRAiyqLdqu-iFBZI0zPyWfAYnbhP-fMPdnQIdOoD-VHhyO_SCYVBG39DHUbJvwfWlXW15EevKXfrBLfbs_iqcn5b02qMYtnbcwnvWzJzPcz6yVodT3a5J0d627IJ-L4vqE2e6VTWko_AyTBoZHIZWkfzegxPLERHW_gX4r5-IJjkwRXnreOfiBhZMNtidNeVKe3stvbKrhmjg0R-oadhfS2ibGR8gmymSUVIguTh5WX7OCxXuWi9ENEmVav1-4wX7ahozXZ0UDGQlJgft7dRaGk32WHdz9JR5aBZsTGYmiqdcwruczvAKmXUwhtlJ4NPlNHPdzOHkDUEE0CE2P1ncuL0U3'
-// };
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('https://waaasil.com/care/api/user-login'));
-    request.fields.addAll({
-      'username': 'doc1234@gmail.com',
-      'password': 'doc@12345',
-      'user_type': '1'
-    });
-
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
-      print("you must write the rout");
-    } else {
-      print(response.reasonPhrase);
-    }
-  }
-////////////////////////////////////////
-
-//     SharedPreferences prefs = await SharedPreferences.getInstance();
-//     print("hello  from sign in ");
-//     print("login ya  ");
-//     var response1 = await http
-//         .post(Uri.parse("http://waaasil.com/care/api/userLogin"), headers: {
-//       'Accept': 'application/json',
-//       'Authorization': 'Bearer $token'
-//     }, body: {
-//       'username': email,
-//       'password': pass,
-//       'user_type': '1'
-//     }
-//             // {'username': email,'password': pass,'user_type': userLevel}
-//             );
-
-//     String jsonsDataString = response1.body
-//         .toString(); // toString of Response's body is assigned to jsonDataString
-//    // var _data = jsonDecode(jsonsDataString);
-//     //print(_data.toString());
-//     print("DATA123");
-//     print(response1.statusCode);
-//     var jsonResponse = json.decode(response1.body);
-//     print(jsonResponse['code']);
-//     if (response1.statusCode == 200)
-//     {
-//       print(response1.body);
-//       if (jsonResponse['code'] == 200) {
-//         print("jsonResponse != null");
-//         print(jsonResponse);
-//         print(jsonResponse['data']['userId']);
-//         setState(() {
-//           _isLoading = true;
-//           print("hello   response.. data   ");
-//           prefs.setString(
-//               'userId', (jsonResponse['data']['userId']).toString());
-//         });
-//         // print(prefs.getString('userid'));
-//         //sharedPreferences.setString("token", jsonResponse['token']);
-//         Navigator.of(context).pushAndRemoveUntil(
-//             MaterialPageRoute(builder: (BuildContext context) => OTP_Page()),
-//             (Route<dynamic> route) => false);
-//         print("the last  ");
-//       } else {
-//         // setState(() {
-//         //   _isLoading = false;
-//         // });
-//         final snackBar = SnackBar(
-//           content: Text(jsonResponse['error']),
-//           backgroundColor: Colors.teal,
-//         );
-//         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-//         Navigator.of(context).pushAndRemoveUntil(
-//             MaterialPageRoute(builder: (BuildContext context) => MainLogin()),
-//             (Route<dynamic> route) => false);
-//       }
-
-//     }
-//     else if(response1.statusCode ==401) {
-//       print("This ,assage");
-// print( jsonResponse['message']);
-//     }
-//   }
-// }
- NewUser(String name, String password, String token) async
-   {
-    // token =shared.getinitToken().toString();
-    // print("inside login login");
-    // // token = await createToken();
-    // print(await token);
+  // ignore: non_constant_identifier_names
+  NewUser(String email, String password) async {
+    final box = GetStorage();
     print("inside 111111111111111 api");
-
-    Map data1 = {
-      'username': 'doc1234@gmail.com',
-      'password': 'doc@12345',
-      'user_type': '1'
-    };
+    token = box.read('token1');
+    Map data1 = {'username': email, 'password': password, 'user_type': '1'};
     var headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
@@ -437,20 +282,64 @@ class _MainLoginState extends State<MainLogin> {
         Uri.parse("https://waaasil.com/care/api/user-login"),
         body: data1,
         headers: {
-          'Accept':'application/json',
-          'Authorization':'Bearer $token'
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
         });
+    setState(() {
+      loading = false;
+    });
     if (response1.statusCode == 200) {
       print(response1.body);
       var jsonResponse = await json.decode(response1.body);
       switch (jsonResponse["code"]) {
         case 200:
-          print("user found ya shahad");
-          var userid=jsonResponse["data"]["id"];
-         // jsonResponse["data"]["id"]
-         // here we must text user status to check if he active or not 
-          print(userid);
-        break;
+          box.write('email', email);
+          box.write('password', password);
+          box.write('name', jsonResponse["data"]["name"]);
+          box.write('userId', jsonResponse["data"]["id"]);
+          box.write('userPhone', jsonResponse["data"]["user_phone"]);
+          box.write('providerId', jsonResponse["data"]["provider"]["id"]);
+          box.write('roleId', jsonResponse["data"]["provider"]["role"]["id"]);
+          box.write(
+              'roleName', jsonResponse["data"]["provider"]["role"]["name"]);
+          if (jsonResponse["data"]["image"] == null) {
+          } else {
+            box.write('userImage', jsonResponse["data"]["image"]);
+          }
+
+          if (jsonResponse["data"]["status"].toString() == "1") {
+            if (jsonResponse["data"]["provider"]["role_id"].toString() == "1") {
+              //doctor role
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => HomePatient()));
+            } else if (jsonResponse["data"]["provider"]["role_id"].toString() ==
+                "2") {
+              //pharmacy
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => HomePrescription()));
+            } else if (jsonResponse["data"]["provider"]["role_id"].toString() ==
+                "3") {
+              //labotry
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => HomeExamner()));
+            }
+          } else {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => InActive()));
+          }
+
+          // jsonResponse["data"]["id"]905824277","user_type":"1","image":null,"status":"0","address":null,"gender_id":2,"state_id":null,"email_verified_at":null,
+          // here we must text user status to check if he active or not
+
+          break;
         case 500:
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(jsonResponse["error"]),

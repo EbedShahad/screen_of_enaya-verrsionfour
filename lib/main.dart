@@ -1,55 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:cron/cron.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:screen_of_enaya/Blog/emblog.dart';
-import 'package:screen_of_enaya/Patient/TobBar/HealthProfile.dart';
-import 'package:screen_of_enaya/body/examiner_part/pages/Exam.dart';
-import 'package:screen_of_enaya/body/main_login/main_login.dart'; 
-import 'package:screen_of_enaya/body/splash_screen/spalsh_screen.dart';
-import 'package:screen_of_enaya/data.dart';
-import 'package:screen_of_enaya/body/patient_part/add_new_patient/add_medical_info.dart';
-import 'package:screen_of_enaya/patients.dart';
-import 'package:screen_of_enaya/test_share.dart';
-import 'Patient/TobBar/topBar.dart';
+import 'package:screen_of_enaya/body/main_login/main_login.dart';
+import 'body/splash_screen/spalsh_screen.dart';
+import 'data.dart';
+import 'patients.dart';
 import 'app/genral/sharepref.dart';
-import 'app/token/refresh_tomen.dart';
-import 'body/create_acount/signUp.dart';
-import 'body/examiner_part/pages/HomeExamner.dart';
-import 'body/forget_pass/acount_not_found.dart';
-import 'body/forget_pass/enterUserName.dart';
-import 'body/forget_pass/forget_pass.dart';
-import 'body/forget_pass/reset_password.dart';
-import 'body/main_login/inactive_stauts.dart';
-
-import 'body/patient_part/add_new_patient/main_add_patient.dart';
-import 'body/patient_part/all_patient_view/pages/HomePatient.dart';
-import 'body/patient_part/patient_profile/pages/main_profile_patient.dart';
-import 'body/patient_part/patient_profile/pages/patientProfile.dart';
-import 'body/pharmicy_part/showAllPres/pages/HomePrescripton.dart';
-import 'doctorProfile/pages/patient_visit_done/add_visit.dart';
 import 'drawer/header.dart';
-
-//import 'package:font_awesome_flutter_example/icons.dart';
-
-void main() {
-  // shared.initToken("shahad abd allah mohammed");
-  
+void main() async {
+  await GetStorage.init();
   runApp(MyApp());
 }
-// Future<void> main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   // await Firebase.initializeApp();
-//    // splash screen to show once
-// //  await _init().then((firstLaunch) {
-//     runApp(MyApp(firstLaunch: firstLaunch));}
-//    // splash screen to show once
-//    }
-// splash screen to show once
-Future<bool> _init() async {
-  bool firstLaunch = await sharingData().getFirstTimeLaunch();
 
-  return firstLaunch;
-}
+
+// Future<bool> _init() async {
+//   bool firstLaunch = await sharingData().getFirstTimeLaunch();
+
+//   return firstLaunch;
+// }
 
 class MyApp extends StatelessWidget {
   final bool firstLaunch;
@@ -59,7 +27,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       // theme: _buildShrineTheme(),
       title: 'Care',
-      home:AddVisit(),
+      home:MainLogin(),
+      //1 SplashScreen(),
+      // PatienMedicalInfo(p_name:"ali",p_file_no:"P0053",p_id:"13"),
+      //MainaddPatient(),
+      //PatienMedicalInfo(p_name:"ali",p_file_no:"P0053",p_id:"13"),
+      //HomePatient(),
       //MainaddPatient(),
       //HomeExamner(),
       //MainProfilePatient(),
